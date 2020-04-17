@@ -1,0 +1,33 @@
+#!/usr/bin/env ruby
+
+require "faraday"
+require "thor"
+require "yaml"
+
+class Upstream < Thor
+  def self.exit_on_failure?
+    true
+  end
+
+  desc "endpoints TAG", "fetches endpoints available from Concourse repository"
+  long_desc <<~DESC
+    `upstream endpoints TAG` will update `lib/concourse_fly/endpoints/<TAG>.yml`
+    where TAG is Git reference in github.com/concourse/concourse (e.g. v5.8.0)
+  DESC
+  def endpoints(tag)
+    endpoints = {}
+    response = Faraday.get "https://raw.githubusercontent.com/concourse/concourse/#{tag}/atc/routes.go"
+    response.body.scan(/\{Path\: .*, Method\: .*, Name\: .*\}/).each do |endpoint|
+      data = YAML.load(endpoint).transform_keys(&:downcase)
+      endpoints[data["name"]] = data.reject { |k, v| k == "name" }
+    end
+
+    endpoints["SaveConfig"]["params"] = ["check_creds"]
+
+    open("lib/concourse_fly/endpoints/#{tag}.yml", "w") do |f|
+      f.write(endpoints.to_yaml)
+    end
+  end
+end
+
+Upstream.start ARGV
