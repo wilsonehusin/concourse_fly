@@ -26,5 +26,5 @@ jobs:
         ruby-version: 2.6.x
     - name: Standard Lint
       run: |
-        gem install standardrb -v 0.1.10
-        RSPEC_FOCUS=0 standardrb .
+        gem install standard -v 0.1.10
+        standardrb .
