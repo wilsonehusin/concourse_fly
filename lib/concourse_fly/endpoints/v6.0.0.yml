@@ -1,0 +1,273 @@
+---
+SaveConfig:
+  path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/config"
+  method: PUT
+  params:
+  - check_creds
+GetConfig:
+  path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/config"
+  method: GET
+CreateBuild:
+  path: "/api/v1/teams/:team_name/builds"
+  method: POST
+ListBuilds:
+  path: "/api/v1/builds"
+  method: GET
+GetBuild:
+  path: "/api/v1/builds/:build_id"
+  method: GET
+GetBuildPlan:
+  path: "/api/v1/builds/:build_id/plan"
+  method: GET
+BuildEvents:
+  path: "/api/v1/builds/:build_id/events"
+  method: GET
+BuildResources:
+  path: "/api/v1/builds/:build_id/resources"
+  method: GET
+AbortBuild:
+  path: "/api/v1/builds/:build_id/abort"
+  method: PUT
+GetBuildPreparation:
+  path: "/api/v1/builds/:build_id/preparation"
+  method: GET
+ListBuildArtifacts:
+  path: "/api/v1/builds/:build_id/artifacts"
+  method: GET
+GetCheck:
+  path: "/api/v1/checks/:check_id"
+  method: GET
+ListAllJobs:
+  path: "/api/v1/jobs"
+  method: GET
+ListJobs:
+  path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/jobs"
+  method: GET
+GetJob:
+  path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/jobs/:job_name"
+  method: GET
+ListJobBuilds:
+  path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/jobs/:job_name/builds"
+  method: GET
+CreateJobBuild:
+  path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/jobs/:job_name/builds"
+  method: POST
+RerunJobBuild:
+  path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/jobs/:job_name/builds/:build_name"
+  method: POST
+ListJobInputs:
+  path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/jobs/:job_name/inputs"
+  method: GET
+GetJobBuild:
+  path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/jobs/:job_name/builds/:build_name"
+  method: GET
+PauseJob:
+  path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/jobs/:job_name/pause"
+  method: PUT
+UnpauseJob:
+  path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/jobs/:job_name/unpause"
+  method: PUT
+ScheduleJob:
+  path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/jobs/:job_name/schedule"
+  method: PUT
+JobBadge:
+  path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/jobs/:job_name/badge"
+  method: GET
+MainJobBadge:
+  path: "/api/v1/pipelines/:pipeline_name/jobs/:job_name/badge"
+  method: GET
+ClearTaskCache:
+  path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/jobs/:job_name/tasks/:step_name/cache"
+  method: DELETE
+ListAllPipelines:
+  path: "/api/v1/pipelines"
+  method: GET
+ListPipelines:
+  path: "/api/v1/teams/:team_name/pipelines"
+  method: GET
+GetPipeline:
+  path: "/api/v1/teams/:team_name/pipelines/:pipeline_name"
+  method: GET
+DeletePipeline:
+  path: "/api/v1/teams/:team_name/pipelines/:pipeline_name"
+  method: DELETE
+OrderPipelines:
+  path: "/api/v1/teams/:team_name/pipelines/ordering"
+  method: PUT
+PausePipeline:
+  path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/pause"
+  method: PUT
+UnpausePipeline:
+  path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/unpause"
+  method: PUT
+ExposePipeline:
+  path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/expose"
+  method: PUT
+HidePipeline:
+  path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/hide"
+  method: PUT
+GetVersionsDB:
+  path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/versions-db"
+  method: GET
+RenamePipeline:
+  path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/rename"
+  method: PUT
+ListPipelineBuilds:
+  path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/builds"
+  method: GET
+CreatePipelineBuild:
+  path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/builds"
+  method: POST
+PipelineBadge:
+  path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/badge"
+  method: GET
+ListAllResources:
+  path: "/api/v1/resources"
+  method: GET
+ListResources:
+  path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/resources"
+  method: GET
+ListResourceTypes:
+  path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/resource-types"
+  method: GET
+GetResource:
+  path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/resources/:resource_name"
+  method: GET
+CheckResource:
+  path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/resources/:resource_name/check"
+  method: POST
+CheckResourceWebHook:
+  path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/resources/:resource_name/check/webhook"
+  method: POST
+CheckResourceType:
+  path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/resource-types/:resource_type_name/check"
+  method: POST
+ListResourceVersions:
+  path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/resources/:resource_name/versions"
+  method: GET
+GetResourceVersion:
+  path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/resources/:resource_name/versions/:resource_config_version_id"
+  method: GET
+EnableResourceVersion:
+  path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/resources/:resource_name/versions/:resource_config_version_id/enable"
+  method: PUT
+DisableResourceVersion:
+  path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/resources/:resource_name/versions/:resource_config_version_id/disable"
+  method: PUT
+PinResourceVersion:
+  path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/resources/:resource_name/versions/:resource_config_version_id/pin"
+  method: PUT
+UnpinResource:
+  path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/resources/:resource_name/unpin"
+  method: PUT
+SetPinCommentOnResource:
+  path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/resources/:resource_name/pin_comment"
+  method: PUT
+ListBuildsWithVersionAsInput:
+  path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/resources/:resource_name/versions/:resource_config_version_id/input_to"
+  method: GET
+ListBuildsWithVersionAsOutput:
+  path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/resources/:resource_name/versions/:resource_config_version_id/output_of"
+  method: GET
+GetResourceCausality:
+  path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/resources/:resource_name/versions/:resource_version_id/causality"
+  method: GET
+GetCC:
+  path: "/api/v1/teams/:team_name/cc.xml"
+  method: GET
+ListWorkers:
+  path: "/api/v1/workers"
+  method: GET
+RegisterWorker:
+  path: "/api/v1/workers"
+  method: POST
+LandWorker:
+  path: "/api/v1/workers/:worker_name/land"
+  method: PUT
+RetireWorker:
+  path: "/api/v1/workers/:worker_name/retire"
+  method: PUT
+PruneWorker:
+  path: "/api/v1/workers/:worker_name/prune"
+  method: PUT
+HeartbeatWorker:
+  path: "/api/v1/workers/:worker_name/heartbeat"
+  method: PUT
+DeleteWorker:
+  path: "/api/v1/workers/:worker_name"
+  method: DELETE
+GetLogLevel:
+  path: "/api/v1/log-level"
+  method: GET
+SetLogLevel:
+  path: "/api/v1/log-level"
+  method: PUT
+DownloadCLI:
+  path: "/api/v1/cli"
+  method: GET
+GetInfo:
+  path: "/api/v1/info"
+  method: GET
+GetInfoCreds:
+  path: "/api/v1/info/creds"
+  method: GET
+ListActiveUsersSince:
+  path: "/api/v1/users"
+  method: GET
+ListDestroyingContainers:
+  path: "/api/v1/containers/destroying"
+  method: GET
+ReportWorkerContainers:
+  path: "/api/v1/containers/report"
+  method: PUT
+ListContainers:
+  path: "/api/v1/teams/:team_name/containers"
+  method: GET
+GetContainer:
+  path: "/api/v1/teams/:team_name/containers/:id"
+  method: GET
+HijackContainer:
+  path: "/api/v1/teams/:team_name/containers/:id/hijack"
+  method: GET
+ListVolumes:
+  path: "/api/v1/teams/:team_name/volumes"
+  method: GET
+ListDestroyingVolumes:
+  path: "/api/v1/volumes/destroying"
+  method: GET
+ReportWorkerVolumes:
+  path: "/api/v1/volumes/report"
+  method: PUT
+ListTeams:
+  path: "/api/v1/teams"
+  method: GET
+GetTeam:
+  path: "/api/v1/teams/:team_name"
+  method: GET
+SetTeam:
+  path: "/api/v1/teams/:team_name"
+  method: PUT
+RenameTeam:
+  path: "/api/v1/teams/:team_name/rename"
+  method: PUT
+DestroyTeam:
+  path: "/api/v1/teams/:team_name"
+  method: DELETE
+ListTeamBuilds:
+  path: "/api/v1/teams/:team_name/builds"
+  method: GET
+CreateArtifact:
+  path: "/api/v1/teams/:team_name/artifacts"
+  method: POST
+GetArtifact:
+  path: "/api/v1/teams/:team_name/artifacts/:artifact_id"
+  method: GET
+GetWall:
+  path: "/api/v1/wall"
+  method: GET
+SetWall:
+  path: "/api/v1/wall"
+  method: PUT
+ClearWall:
+  path: "/api/v1/wall"
+  method: DELETE
