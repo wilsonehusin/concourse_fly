@@ -1,7 +1,3 @@
-require "faraday"
-require "json"
-require "yaml"
-
 require "concourse_fly/errors"
 
 require "concourse_fly/client"

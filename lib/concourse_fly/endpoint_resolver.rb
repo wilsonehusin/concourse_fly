@@ -1,3 +1,6 @@
+require "faraday"
+require "yaml"
+
 module ConcourseFly
   class EndpointResolver
     def initialize(version)

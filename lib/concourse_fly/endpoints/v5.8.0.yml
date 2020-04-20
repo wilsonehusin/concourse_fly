@@ -2,8 +2,6 @@
 SaveConfig:
   path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/config"
   method: PUT
-  params:
-  - check_creds
 GetConfig:
   path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/config"
   method: GET
