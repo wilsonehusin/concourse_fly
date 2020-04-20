@@ -1,7 +1,8 @@
-require "concourse_fly/endpoints"
+require "faraday"
+require "json"
+require "concourse_fly/errors"
+require "concourse_fly/client"
 require "concourse_fly/version"
 
 module ConcourseFly
-  class Error < StandardError; end
-  class Client; end
 end
