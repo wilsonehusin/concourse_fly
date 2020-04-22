@@ -1,256 +1,341 @@
 ---
-SaveConfig:
-  path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/config"
+- !ruby/struct:ConcourseFly::Endpoint
+  name: SaveConfig
   method: PUT
-GetConfig:
   path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/config"
+- !ruby/struct:ConcourseFly::Endpoint
+  name: GetConfig
   method: GET
-CreateBuild:
-  path: "/api/v1/teams/:team_name/builds"
+  path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/config"
+- !ruby/struct:ConcourseFly::Endpoint
+  name: CreateBuild
   method: POST
-ListBuilds:
+  path: "/api/v1/teams/:team_name/builds"
+- !ruby/struct:ConcourseFly::Endpoint
+  name: ListBuilds
+  method: GET
   path: "/api/v1/builds"
+- !ruby/struct:ConcourseFly::Endpoint
+  name: GetBuild
   method: GET
-GetBuild:
   path: "/api/v1/builds/:build_id"
+- !ruby/struct:ConcourseFly::Endpoint
+  name: GetBuildPlan
   method: GET
-GetBuildPlan:
   path: "/api/v1/builds/:build_id/plan"
+- !ruby/struct:ConcourseFly::Endpoint
+  name: BuildEvents
   method: GET
-BuildEvents:
   path: "/api/v1/builds/:build_id/events"
+- !ruby/struct:ConcourseFly::Endpoint
+  name: BuildResources
   method: GET
-BuildResources:
   path: "/api/v1/builds/:build_id/resources"
-  method: GET
-AbortBuild:
+- !ruby/struct:ConcourseFly::Endpoint
+  name: AbortBuild
+  method: PUT
   path: "/api/v1/builds/:build_id/abort"
-  method: PUT
-GetBuildPreparation:
+- !ruby/struct:ConcourseFly::Endpoint
+  name: GetBuildPreparation
+  method: GET
   path: "/api/v1/builds/:build_id/preparation"
+- !ruby/struct:ConcourseFly::Endpoint
+  name: ListBuildArtifacts
   method: GET
-ListBuildArtifacts:
   path: "/api/v1/builds/:build_id/artifacts"
+- !ruby/struct:ConcourseFly::Endpoint
+  name: GetCheck
   method: GET
-GetCheck:
   path: "/api/v1/checks/:check_id"
+- !ruby/struct:ConcourseFly::Endpoint
+  name: ListAllJobs
   method: GET
-ListAllJobs:
   path: "/api/v1/jobs"
+- !ruby/struct:ConcourseFly::Endpoint
+  name: ListJobs
   method: GET
-ListJobs:
   path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/jobs"
+- !ruby/struct:ConcourseFly::Endpoint
+  name: GetJob
   method: GET
-GetJob:
   path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/jobs/:job_name"
+- !ruby/struct:ConcourseFly::Endpoint
+  name: ListJobBuilds
   method: GET
-ListJobBuilds:
   path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/jobs/:job_name/builds"
-  method: GET
-CreateJobBuild:
-  path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/jobs/:job_name/builds"
+- !ruby/struct:ConcourseFly::Endpoint
+  name: CreateJobBuild
   method: POST
-ListJobInputs:
+  path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/jobs/:job_name/builds"
+- !ruby/struct:ConcourseFly::Endpoint
+  name: ListJobInputs
+  method: GET
   path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/jobs/:job_name/inputs"
+- !ruby/struct:ConcourseFly::Endpoint
+  name: GetJobBuild
   method: GET
-GetJobBuild:
   path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/jobs/:job_name/builds/:build_name"
-  method: GET
-PauseJob:
+- !ruby/struct:ConcourseFly::Endpoint
+  name: PauseJob
+  method: PUT
   path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/jobs/:job_name/pause"
+- !ruby/struct:ConcourseFly::Endpoint
+  name: UnpauseJob
   method: PUT
-UnpauseJob:
   path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/jobs/:job_name/unpause"
-  method: PUT
-JobBadge:
+- !ruby/struct:ConcourseFly::Endpoint
+  name: JobBadge
+  method: GET
   path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/jobs/:job_name/badge"
+- !ruby/struct:ConcourseFly::Endpoint
+  name: MainJobBadge
   method: GET
-MainJobBadge:
   path: "/api/v1/pipelines/:pipeline_name/jobs/:job_name/badge"
-  method: GET
-ClearTaskCache:
+- !ruby/struct:ConcourseFly::Endpoint
+  name: ClearTaskCache
+  method: DELETE
   path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/jobs/:job_name/tasks/:step_name/cache"
-  method: DELETE
-ListAllPipelines:
+- !ruby/struct:ConcourseFly::Endpoint
+  name: ListAllPipelines
+  method: GET
   path: "/api/v1/pipelines"
+- !ruby/struct:ConcourseFly::Endpoint
+  name: ListPipelines
   method: GET
-ListPipelines:
   path: "/api/v1/teams/:team_name/pipelines"
+- !ruby/struct:ConcourseFly::Endpoint
+  name: GetPipeline
   method: GET
-GetPipeline:
   path: "/api/v1/teams/:team_name/pipelines/:pipeline_name"
-  method: GET
-DeletePipeline:
-  path: "/api/v1/teams/:team_name/pipelines/:pipeline_name"
+- !ruby/struct:ConcourseFly::Endpoint
+  name: DeletePipeline
   method: DELETE
-OrderPipelines:
+  path: "/api/v1/teams/:team_name/pipelines/:pipeline_name"
+- !ruby/struct:ConcourseFly::Endpoint
+  name: OrderPipelines
+  method: PUT
   path: "/api/v1/teams/:team_name/pipelines/ordering"
+- !ruby/struct:ConcourseFly::Endpoint
+  name: PausePipeline
   method: PUT
-PausePipeline:
   path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/pause"
+- !ruby/struct:ConcourseFly::Endpoint
+  name: UnpausePipeline
   method: PUT
-UnpausePipeline:
   path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/unpause"
+- !ruby/struct:ConcourseFly::Endpoint
+  name: ExposePipeline
   method: PUT
-ExposePipeline:
   path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/expose"
+- !ruby/struct:ConcourseFly::Endpoint
+  name: HidePipeline
   method: PUT
-HidePipeline:
   path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/hide"
-  method: PUT
-GetVersionsDB:
+- !ruby/struct:ConcourseFly::Endpoint
+  name: GetVersionsDB
+  method: GET
   path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/versions-db"
-  method: GET
-RenamePipeline:
+- !ruby/struct:ConcourseFly::Endpoint
+  name: RenamePipeline
+  method: PUT
   path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/rename"
-  method: PUT
-ListPipelineBuilds:
-  path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/builds"
+- !ruby/struct:ConcourseFly::Endpoint
+  name: ListPipelineBuilds
   method: GET
-CreatePipelineBuild:
   path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/builds"
+- !ruby/struct:ConcourseFly::Endpoint
+  name: CreatePipelineBuild
   method: POST
-PipelineBadge:
+  path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/builds"
+- !ruby/struct:ConcourseFly::Endpoint
+  name: PipelineBadge
+  method: GET
   path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/badge"
+- !ruby/struct:ConcourseFly::Endpoint
+  name: ListAllResources
   method: GET
-ListAllResources:
   path: "/api/v1/resources"
+- !ruby/struct:ConcourseFly::Endpoint
+  name: ListResources
   method: GET
-ListResources:
   path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/resources"
+- !ruby/struct:ConcourseFly::Endpoint
+  name: ListResourceTypes
   method: GET
-ListResourceTypes:
   path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/resource-types"
+- !ruby/struct:ConcourseFly::Endpoint
+  name: GetResource
   method: GET
-GetResource:
   path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/resources/:resource_name"
-  method: GET
-CheckResource:
+- !ruby/struct:ConcourseFly::Endpoint
+  name: CheckResource
+  method: POST
   path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/resources/:resource_name/check"
+- !ruby/struct:ConcourseFly::Endpoint
+  name: CheckResourceWebHook
   method: POST
-CheckResourceWebHook:
   path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/resources/:resource_name/check/webhook"
+- !ruby/struct:ConcourseFly::Endpoint
+  name: CheckResourceType
   method: POST
-CheckResourceType:
   path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/resource-types/:resource_type_name/check"
-  method: POST
-ListResourceVersions:
+- !ruby/struct:ConcourseFly::Endpoint
+  name: ListResourceVersions
+  method: GET
   path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/resources/:resource_name/versions"
+- !ruby/struct:ConcourseFly::Endpoint
+  name: GetResourceVersion
   method: GET
-GetResourceVersion:
   path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/resources/:resource_name/versions/:resource_config_version_id"
-  method: GET
-EnableResourceVersion:
+- !ruby/struct:ConcourseFly::Endpoint
+  name: EnableResourceVersion
+  method: PUT
   path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/resources/:resource_name/versions/:resource_config_version_id/enable"
+- !ruby/struct:ConcourseFly::Endpoint
+  name: DisableResourceVersion
   method: PUT
-DisableResourceVersion:
   path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/resources/:resource_name/versions/:resource_config_version_id/disable"
+- !ruby/struct:ConcourseFly::Endpoint
+  name: PinResourceVersion
   method: PUT
-PinResourceVersion:
   path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/resources/:resource_name/versions/:resource_config_version_id/pin"
+- !ruby/struct:ConcourseFly::Endpoint
+  name: UnpinResource
   method: PUT
-UnpinResource:
   path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/resources/:resource_name/unpin"
+- !ruby/struct:ConcourseFly::Endpoint
+  name: SetPinCommentOnResource
   method: PUT
-SetPinCommentOnResource:
   path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/resources/:resource_name/pin_comment"
-  method: PUT
-ListBuildsWithVersionAsInput:
+- !ruby/struct:ConcourseFly::Endpoint
+  name: ListBuildsWithVersionAsInput
+  method: GET
   path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/resources/:resource_name/versions/:resource_config_version_id/input_to"
+- !ruby/struct:ConcourseFly::Endpoint
+  name: ListBuildsWithVersionAsOutput
   method: GET
-ListBuildsWithVersionAsOutput:
   path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/resources/:resource_name/versions/:resource_config_version_id/output_of"
+- !ruby/struct:ConcourseFly::Endpoint
+  name: GetResourceCausality
   method: GET
-GetResourceCausality:
   path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/resources/:resource_name/versions/:resource_version_id/causality"
+- !ruby/struct:ConcourseFly::Endpoint
+  name: GetCC
   method: GET
-GetCC:
   path: "/api/v1/teams/:team_name/cc.xml"
+- !ruby/struct:ConcourseFly::Endpoint
+  name: ListWorkers
   method: GET
-ListWorkers:
   path: "/api/v1/workers"
-  method: GET
-RegisterWorker:
-  path: "/api/v1/workers"
+- !ruby/struct:ConcourseFly::Endpoint
+  name: RegisterWorker
   method: POST
-LandWorker:
+  path: "/api/v1/workers"
+- !ruby/struct:ConcourseFly::Endpoint
+  name: LandWorker
+  method: PUT
   path: "/api/v1/workers/:worker_name/land"
+- !ruby/struct:ConcourseFly::Endpoint
+  name: RetireWorker
   method: PUT
-RetireWorker:
   path: "/api/v1/workers/:worker_name/retire"
+- !ruby/struct:ConcourseFly::Endpoint
+  name: PruneWorker
   method: PUT
-PruneWorker:
   path: "/api/v1/workers/:worker_name/prune"
+- !ruby/struct:ConcourseFly::Endpoint
+  name: HeartbeatWorker
   method: PUT
-HeartbeatWorker:
   path: "/api/v1/workers/:worker_name/heartbeat"
-  method: PUT
-DeleteWorker:
+- !ruby/struct:ConcourseFly::Endpoint
+  name: DeleteWorker
+  method: DELETE
   path: "/api/v1/workers/:worker_name"
-  method: DELETE
-GetLogLevel:
-  path: "/api/v1/log-level"
+- !ruby/struct:ConcourseFly::Endpoint
+  name: GetLogLevel
   method: GET
-SetLogLevel:
   path: "/api/v1/log-level"
+- !ruby/struct:ConcourseFly::Endpoint
+  name: SetLogLevel
   method: PUT
-DownloadCLI:
+  path: "/api/v1/log-level"
+- !ruby/struct:ConcourseFly::Endpoint
+  name: DownloadCLI
+  method: GET
   path: "/api/v1/cli"
+- !ruby/struct:ConcourseFly::Endpoint
+  name: GetInfo
   method: GET
-GetInfo:
   path: "/api/v1/info"
+- !ruby/struct:ConcourseFly::Endpoint
+  name: GetInfoCreds
   method: GET
-GetInfoCreds:
   path: "/api/v1/info/creds"
+- !ruby/struct:ConcourseFly::Endpoint
+  name: ListActiveUsersSince
   method: GET
-ListActiveUsersSince:
   path: "/api/v1/users"
+- !ruby/struct:ConcourseFly::Endpoint
+  name: ListDestroyingContainers
   method: GET
-ListDestroyingContainers:
   path: "/api/v1/containers/destroying"
-  method: GET
-ReportWorkerContainers:
+- !ruby/struct:ConcourseFly::Endpoint
+  name: ReportWorkerContainers
+  method: PUT
   path: "/api/v1/containers/report"
-  method: PUT
-ListContainers:
+- !ruby/struct:ConcourseFly::Endpoint
+  name: ListContainers
+  method: GET
   path: "/api/v1/teams/:team_name/containers"
+- !ruby/struct:ConcourseFly::Endpoint
+  name: GetContainer
   method: GET
-GetContainer:
   path: "/api/v1/teams/:team_name/containers/:id"
+- !ruby/struct:ConcourseFly::Endpoint
+  name: HijackContainer
   method: GET
-HijackContainer:
   path: "/api/v1/teams/:team_name/containers/:id/hijack"
+- !ruby/struct:ConcourseFly::Endpoint
+  name: ListVolumes
   method: GET
-ListVolumes:
   path: "/api/v1/teams/:team_name/volumes"
+- !ruby/struct:ConcourseFly::Endpoint
+  name: ListDestroyingVolumes
   method: GET
-ListDestroyingVolumes:
   path: "/api/v1/volumes/destroying"
-  method: GET
-ReportWorkerVolumes:
+- !ruby/struct:ConcourseFly::Endpoint
+  name: ReportWorkerVolumes
+  method: PUT
   path: "/api/v1/volumes/report"
-  method: PUT
-ListTeams:
+- !ruby/struct:ConcourseFly::Endpoint
+  name: ListTeams
+  method: GET
   path: "/api/v1/teams"
+- !ruby/struct:ConcourseFly::Endpoint
+  name: GetTeam
   method: GET
-GetTeam:
   path: "/api/v1/teams/:team_name"
-  method: GET
-SetTeam:
-  path: "/api/v1/teams/:team_name"
+- !ruby/struct:ConcourseFly::Endpoint
+  name: SetTeam
   method: PUT
-RenameTeam:
+  path: "/api/v1/teams/:team_name"
+- !ruby/struct:ConcourseFly::Endpoint
+  name: RenameTeam
+  method: PUT
   path: "/api/v1/teams/:team_name/rename"
-  method: PUT
-DestroyTeam:
-  path: "/api/v1/teams/:team_name"
+- !ruby/struct:ConcourseFly::Endpoint
+  name: DestroyTeam
   method: DELETE
-ListTeamBuilds:
+  path: "/api/v1/teams/:team_name"
+- !ruby/struct:ConcourseFly::Endpoint
+  name: ListTeamBuilds
+  method: GET
   path: "/api/v1/teams/:team_name/builds"
-  method: GET
-CreateArtifact:
-  path: "/api/v1/teams/:team_name/artifacts"
+- !ruby/struct:ConcourseFly::Endpoint
+  name: CreateArtifact
   method: POST
-GetArtifact:
-  path: "/api/v1/teams/:team_name/artifacts/:artifact_id"
+  path: "/api/v1/teams/:team_name/artifacts"
+- !ruby/struct:ConcourseFly::Endpoint
+  name: GetArtifact
   method: GET
+  path: "/api/v1/teams/:team_name/artifacts/:artifact_id"

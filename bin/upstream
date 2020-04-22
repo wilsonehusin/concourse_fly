@@ -3,7 +3,7 @@
 require "bundler/setup"
 require "thor"
 
-require "concourse_fly/endpoint_resolver"
+require "concourse_fly/endpoint"
 
 class Upstream < Thor
   def self.exit_on_failure?
@@ -16,7 +16,7 @@ class Upstream < Thor
     where TAG is Git reference in github.com/concourse/concourse (e.g. v5.8.0)
   DESC
   def endpoints(tag)
-    resolver = ConcourseFly::EndpointResolver.new tag
+    resolver = ConcourseFly::EndpointImporter.new tag
     endpoints = resolver.fetch(false)
 
     open("lib/concourse_fly/endpoints/#{tag}.yml", "w") do |f|
