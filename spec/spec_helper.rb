@@ -1,5 +1,6 @@
 require "bundler/setup"
 require "concourse_fly"
+require "webmock/rspec"
 
 RSpec.configure do |config|
   config.example_status_persistence_file_path = "/tmp/concourse_fly.rspec"
