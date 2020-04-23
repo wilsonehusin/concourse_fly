@@ -9,7 +9,7 @@ module ConcourseFly
           stub_request(:get, "#{concourse_url}/api/v1/info")
             .to_return(status: 200, body: '{"version":"5.8.0","worker_version":"2.2","external_url":"https://wings.pivotal.io"}')
         end
-        it "converts version to Git tag convetion" do
+        it "converts version to Git tag convention" do
           expect(subject.version).to eq("v5.8.0")
         end
       end
