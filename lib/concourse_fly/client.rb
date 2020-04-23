@@ -12,40 +12,33 @@ module ConcourseFly
       yield self if block_given?
     end
 
-    def validate_target!
-      http_response = http_client.get("/api/v1/info")
-      content = JSON.parse(http_response.body)
-      unless content["external_url"] == @target_url
-        raise TargetError.new("Target does not match external URL of Concourse instance!")
-      end
-
-      true
-    rescue Faraday::Error
-      raise FlyError.new("Unable to reach target!")
-    rescue JSON::ParserError
-      raise ResponseError.new("Unable to understand response!")
+    def version
+      @version ||= "v#{self[:get_info]["version"]}"
     end
 
     def users
-      http_response = http_client.get("/api/v1/users") { |request|
-        request.headers["Content-Type"] = "application/json"
-        request.headers["Authorization"] = auth_header
-      }
-      raise AuthError.new("Authentication failure!") unless http_response.status < 300
+      self[:list_active_users_since]
+    end
 
-      JSON.parse(http_response.body)
+    def [](endpoint_sym)
+      endpoint = endpoint_lookup(endpoint_sym)
+      response = connection.run_request(endpoint.http_method.downcase.to_sym, endpoint.path, nil, nil)
+      raise AuthError.new("Authentication failure!") if [401, 403].include?(response.status)
+      raise FlyError.new("Concourse was unable to respond properly -- #{response.status}: #{response.body}") if (500..599).cover?(response.status)
+
+      JSON.parse(response.body)
     rescue Faraday::Error
       raise FlyError.new("Unable to reach target!")
     rescue JSON::ParserError
       raise ResponseError.new("Unable to understand response!")
     end
 
-    private
+    # private
 
     def auth_header
       @auth_header ||= case @auth_type
                        when :flyrc
-                         flyrc_content = YAML.safe_load(File.read("~/.flyrc"))
+                         flyrc_content = YAML.safe_load(File.read(File.join(Dir.home + "/.flyrc")))
                          token = flyrc_content["targets"][@flyrc_target]["token"]
                          "#{token["type"]} #{token["value"]}"
                        else
@@ -55,8 +48,18 @@ module ConcourseFly
       ""
     end
 
-    def http_client
-      @client ||= Faraday.new @target_url
+    def connection
+      @faraday_connection ||= Faraday.new(@target_url) { |c|
+        c.headers["Authorization"] = auth_header
+        c.headers["Content-Type"] = "application/json"
+      }
+    end
+
+    def endpoint_lookup(endpoint_sym)
+      @endpoints ||= EndpointImporter.new(@version).fetch.map { |endpoint|
+        [endpoint["name"].gsub(/(.)([A-Z])/, '\1_\2').downcase.to_sym, endpoint]
+      }.to_h
+      @endpoints.fetch(endpoint_sym)
     end
   end
 end

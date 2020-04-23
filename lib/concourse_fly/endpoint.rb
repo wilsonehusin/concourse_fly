@@ -2,11 +2,11 @@ require "faraday"
 require "yaml"
 
 module ConcourseFly
-  Endpoint = Struct.new(:name, :method, :path)
+  Endpoint = Struct.new(:name, :http_method, :path)
 
   class EndpointImporter
     def initialize(version)
-      @version = version
+      @version = version || "v5.8.0"
     end
 
     def fetch(check_cache = true)
@@ -24,6 +24,7 @@ module ConcourseFly
     def fetch_from_source
       response = Faraday.get "https://raw.githubusercontent.com/concourse/concourse/#{@version}/atc/routes.go"
       response.body.scan(/\{Path\: .*, Method\: .*, Name\: .*\}/).map do |endpoint|
+        # Treating content as JSON
         YAML.safe_load(endpoint).transform_keys(&:downcase)
       end
     end

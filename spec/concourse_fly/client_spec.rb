@@ -1,73 +1,72 @@
 module ConcourseFly
   RSpec.describe Client do
+    let(:auth_header) { {"Authorization" => "Bearer fake_token"} }
+    let(:concourse_url) { "https://wings.pivotal.io" }
     context "unauthenticated API" do
-      subject { Client.new "https://wings.pivotal.io" }
-      context "#validate_target!" do
-        context "when target matches" do
-          it "returns true" do
-            stub = stub_request(:get, "https://wings.pivotal.io/api/v1/info")
-              .to_return(body: '{"external_url": "https://wings.pivotal.io"}')
-            expect(subject.validate_target!).to eq true
-            expect(stub).to have_been_requested
-          end
+      subject { Client.new concourse_url }
+      describe "#version" do
+        before :each do
+          stub_request(:get, "#{concourse_url}/api/v1/info")
+            .to_return(status: 200, body: '{"version":"5.8.0","worker_version":"2.2","external_url":"https://wings.pivotal.io"}')
         end
-        context "when target does not match" do
-          it "raises TargetError" do
-            stub_request(:get, "https://wings.pivotal.io/api/v1/info")
-              .to_return(body: '{"external_url": "https://wingo.pivotal.io"}')
-            expect { subject.validate_target! }.to raise_error TargetError
-          end
-        end
-        context "when response is not understandable" do
-          it "raises ResponseError" do
-            stub_request(:get, "https://wings.pivotal.io/api/v1/info")
-              .to_return(body: "something not json")
-            expect { subject.validate_target! }.to raise_error ResponseError
-          end
-        end
-        context "when Faraday raises arbitrary error" do
-          it "raises FlyError" do
-            stub_request(:get, "https://wings.pivotal.io/api/v1/info")
-              .to_raise(Faraday::Error, nil)
-            expect { subject.validate_target! }.to raise_error FlyError
-          end
+        it "converts version to Git tag convetion" do
+          expect(subject.version).to eq("v5.8.0")
         end
       end
-      context "#users" do
-        it "raises AuthError" do
-          stub_request(:get, "https://wings.pivotal.io/api/v1/users")
+      describe "#users" do
+        before :each do
+          stub_request(:get, "#{concourse_url}/api/v1/users")
             .to_return(status: 401, body: "something not json")
+        end
+        it "raises AuthError" do
           expect { subject.users }.to raise_error AuthError
         end
       end
     end
     context "authenticated API" do
       subject do
-        Client.new("https://wings.pivotal.io") do |c|
+        Client.new(concourse_url) do |c|
           c.auth_type = :flyrc
           c.flyrc_target = "some-target"
         end
       end
-      context "#users" do
-        it "returns list of users" do
-          stub_request(:get, "https://wings.pivotal.io/api/v1/users")
-            .to_return(status: 401, body: "something not json")
-          stub_request(:get, "https://wings.pivotal.io/api/v1/users")
-            .with(headers: {"Authorization" => "Bearer fake_token"})
+      before :each do
+        allow(File).to receive(:read).and_return(<<~YAML)
+          - name: ListBuilds
+            method: GET
+            path: "/api/v1/builds"
+          - name: ListActiveUsersSince
+            method: GET
+            path: "/api/v1/users"
+        YAML
+        allow(File).to receive(:read).with(/flyrc/).and_return(<<~YAML)
+          targets:
+            some-target:
+              api: https://wings.pivotal.io
+              team: main
+              token:
+                type: Bearer
+                value: fake_token
+        YAML
+      end
+      describe "#users" do
+        before :each do
+          stub_request(:get, "#{concourse_url}/api/v1/users")
+            .with(headers: auth_header)
             .to_return(status: 200, body: '[{"id": 123, "username": "fake_user"}]')
-          allow(File).to receive(:read).and_return nil
-          fake_flyrc = <<~YAML
-            targets:
-              some-target:
-                api: https://wings.pivotal.io
-                team: main
-                token:
-                  type: Bearer
-                  value: fake_token
-          YAML
-          allow(File).to receive(:read).with("~/.flyrc").and_return(fake_flyrc)
-
+        end
+        it "returns list of users" do
           expect(subject.users).to eq([{"id" => 123, "username" => "fake_user"}])
+        end
+      end
+      describe "#[]" do
+        before :each do
+          stub_request(:get, "#{concourse_url}/api/v1/builds")
+            .with(headers: auth_header)
+            .to_return(status: 200, body: '[{"id": 1, "name": "main", "auth": {}}]')
+        end
+        it "makes a call given a valid endpoint (e.g. :list_builds)" do
+          expect(subject[:list_builds]).to eq([{"id" => 1, "name" => "main", "auth" => {}}])
         end
       end
     end
