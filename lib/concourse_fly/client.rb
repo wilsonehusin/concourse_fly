@@ -4,8 +4,7 @@ require "json"
 
 module ConcourseFly
   class Client
-    attr_accessor :auth_type
-    attr_accessor :flyrc_target
+    attr_accessor :auth_type, :auth_data
     attr_accessor :target_url
 
     def initialize(target_url)
@@ -24,7 +23,7 @@ module ConcourseFly
       endpoint = endpoint_lookup(endpoint_sym)
       raise EndpointError.new("Unable to automagically resolve #{endpoint_sym} to a valid endpoint") if endpoint.nil?
 
-      response = connection.run_request(endpoint.http_method.downcase.to_sym, endpoint.interpolate(options.path_vars), options.body, nil)
+      response = connection.run_request(endpoint.http_method.downcase.to_sym, endpoint.interpolate(options.path_vars), options.body, {"Authorization" => generate_auth})
       raise AuthError.new("Authentication failure!") if [401, 403].include?(response.status)
       raise FlyError.new("Concourse was unable to respond properly -- #{response.status}: #{response.body}") if (500..599).cover?(response.status)
 
@@ -44,22 +43,21 @@ module ConcourseFly
 
     # private
 
-    def auth_header
+    def generate_auth
       @auth_header ||= case @auth_type
+                       when :raw
+                         @auth_data[:raw]
                        when :flyrc
                          flyrc_content = YAML.safe_load(File.read(File.join(Dir.home + "/.flyrc")))
-                         token = flyrc_content["targets"][@flyrc_target]["token"]
+                         token = flyrc_content["targets"][@auth_data[:flyrc_target]]["token"]
                          "#{token["type"]} #{token["value"]}"
-                       else
-                         ""
       end
     rescue
-      ""
+      nil
     end
 
     def connection
       @faraday_connection ||= Faraday.new(@target_url) { |c|
-        c.headers["Authorization"] = auth_header
         c.headers["Content-Type"] = "application/json"
       }
     end

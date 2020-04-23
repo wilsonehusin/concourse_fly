@@ -2,7 +2,7 @@ module ConcourseFly
   RSpec.describe Client do
     let(:auth_header) { {"Authorization" => "Bearer fake_token"} }
     let(:concourse_url) { "https://wings.pivotal.io" }
-    context "unauthenticated API" do
+    context "unauthenticated HTTP requests" do
       subject { Client.new concourse_url }
       describe "#version" do
         before :each do
@@ -23,11 +23,67 @@ module ConcourseFly
         end
       end
     end
-    context "authenticated API" do
+    context "authorization" do
+      before :each do
+        allow(File).to receive(:read).and_return(<<~YAML)
+          - name: GetInfoCreds
+            http_method: GET
+            path: "/api/v1/info/creds"
+        YAML
+        stub_request(:get, "#{concourse_url}/api/v1/info/creds")
+          .with(headers: auth_header)
+          .to_return(status: 200, body: "{}")
+      end
+      context "providing raw header" do
+        subject do
+          Client.new(concourse_url) do |c|
+            c.auth_type = :raw
+            c.auth_data = {raw: auth_header["Authorization"]}
+          end
+        end
+        it "performs request with provided authorization header" do
+          expect(subject[:get_info_creds]).to eq({})
+        end
+      end
+      context "reading from ~/.flyrc" do
+        subject do
+          Client.new(concourse_url) do |c|
+            c.auth_type = :flyrc
+            c.auth_data = {flyrc_target: "some-target"}
+          end
+        end
+        before :each do
+          allow(File).to receive(:read).with(/flyrc/).and_return(<<~YAML)
+            targets:
+              some-target:
+                api: https://wings.pivotal.io
+                team: main
+                token:
+                  type: Bearer
+                  value: fake_token
+          YAML
+        end
+        it "performs request with provided authorization header" do
+          expect(subject[:get_info_creds]).to eq({})
+        end
+      end
+      xcontext "local username:password" do
+        subject do
+          Client.new(concourse_url) do |c|
+            c.auth_type = :local
+            c.auth_data = {username: "airport", password: "CGK"}
+          end
+        end
+        it "performs request with provided authorization header" do
+          expect(subject[:get_info_creds]).to eq({})
+        end
+      end
+    end
+    context "authenticated HTTP requests" do
       subject do
         Client.new(concourse_url) do |c|
-          c.auth_type = :flyrc
-          c.flyrc_target = "some-target"
+          c.auth_type = :raw
+          c.auth_data = {raw: auth_header["Authorization"]}
         end
       end
       before :each do
@@ -41,15 +97,6 @@ module ConcourseFly
           - name: RenamePipeline
             http_method: PUT
             path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/rename"
-        YAML
-        allow(File).to receive(:read).with(/flyrc/).and_return(<<~YAML)
-          targets:
-            some-target:
-              api: https://wings.pivotal.io
-              team: main
-              token:
-                type: Bearer
-                value: fake_token
         YAML
       end
       describe "#[]" do
