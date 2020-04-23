@@ -28,7 +28,7 @@ fly = ConcourseFly::Client.new("https://ci-dev.net") do |client|
   client.auth_data = {raw: "Bearer adeAOEITNogiim..."}
 end
 
-fly[:get_info]  #=> { "version" => "5.8.0", "worker_version" => "2.2", "external_url" => "https://ci-dev.net"
+fly[:get_info]  #=> {"version" => "5.8.0", "worker_version" => "2.2", "external_url" => "https://ci-dev.net"}
 ```
 
 ### Authorization
