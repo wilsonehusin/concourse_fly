@@ -24,12 +24,14 @@ module ConcourseFly
       raise EndpointError.new("Unable to automagically resolve #{endpoint_sym} to a valid endpoint") if endpoint.nil?
 
       response = connection.run_request(endpoint.http_method.downcase.to_sym, endpoint.interpolate(options.path_vars), options.body, {"Authorization" => generate_auth})
-      raise AuthError.new("Authentication failure!") if [401, 403].include?(response.status)
       raise FlyError.new("Concourse was unable to respond properly -- #{response.status}: #{response.body}") if (500..599).cover?(response.status)
 
       case response.status
       when 204
         true
+      when 401, 403
+        @auth_header = nil
+        raise AuthError.new("Authentication failure!")
       when 404
         false
       else
