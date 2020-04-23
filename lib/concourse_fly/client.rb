@@ -1,4 +1,5 @@
 require "faraday"
+require "ostruct"
 require "json"
 
 module ConcourseFly
@@ -16,21 +17,29 @@ module ConcourseFly
       @version ||= "v#{self[:get_info]["version"]}"
     end
 
-    def users
-      self[:list_active_users_since]
-    end
-
     def [](endpoint_sym)
+      options = OpenStruct.new
+      yield options if block_given?
+
       endpoint = endpoint_lookup(endpoint_sym)
-      response = connection.run_request(endpoint.http_method.downcase.to_sym, endpoint.path, nil, nil)
+      raise EndpointError.new("Unable to automagically resolve #{endpoint_sym} to a valid endpoint") if endpoint.nil?
+
+      response = connection.run_request(endpoint.http_method.downcase.to_sym, endpoint.interpolate(options.path_vars), options.body, nil)
       raise AuthError.new("Authentication failure!") if [401, 403].include?(response.status)
       raise FlyError.new("Concourse was unable to respond properly -- #{response.status}: #{response.body}") if (500..599).cover?(response.status)
 
-      JSON.parse(response.body)
+      case response.status
+      when 204
+        true
+      when 404
+        false
+      else
+        JSON.parse(response.body)
+      end
     rescue Faraday::Error
       raise FlyError.new("Unable to reach target!")
     rescue JSON::ParserError
-      raise ResponseError.new("Unable to understand response!")
+      raise ResponseError.new("Unable to understand response!", response)
     end
 
     # private
@@ -59,7 +68,7 @@ module ConcourseFly
       @endpoints ||= EndpointImporter.new(@version).fetch.map { |endpoint|
         [endpoint["name"].gsub(/(.)([A-Z])/, '\1_\2').downcase.to_sym, endpoint]
       }.to_h
-      @endpoints.fetch(endpoint_sym)
+      @endpoints[endpoint_sym]
     end
   end
 end

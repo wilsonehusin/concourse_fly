@@ -13,13 +13,13 @@ module ConcourseFly
           expect(subject.version).to eq("v5.8.0")
         end
       end
-      describe "#users" do
+      describe "#[]" do
         before :each do
           stub_request(:get, "#{concourse_url}/api/v1/users")
             .to_return(status: 401, body: "something not json")
         end
-        it "raises AuthError" do
-          expect { subject.users }.to raise_error AuthError
+        it "raises AuthError on :list_active_users_since" do
+          expect { subject[:list_active_users_since] }.to raise_error AuthError
         end
       end
     end
@@ -33,11 +33,14 @@ module ConcourseFly
       before :each do
         allow(File).to receive(:read).and_return(<<~YAML)
           - name: ListBuilds
-            method: GET
+            http_method: GET
             path: "/api/v1/builds"
           - name: ListActiveUsersSince
-            method: GET
+            http_method: GET
             path: "/api/v1/users"
+          - name: RenamePipeline
+            http_method: PUT
+            path: "/api/v1/teams/:team_name/pipelines/:pipeline_name/rename"
         YAML
         allow(File).to receive(:read).with(/flyrc/).and_return(<<~YAML)
           targets:
@@ -49,24 +52,38 @@ module ConcourseFly
                 value: fake_token
         YAML
       end
-      describe "#users" do
-        before :each do
-          stub_request(:get, "#{concourse_url}/api/v1/users")
-            .with(headers: auth_header)
-            .to_return(status: 200, body: '[{"id": 123, "username": "fake_user"}]')
-        end
-        it "returns list of users" do
-          expect(subject.users).to eq([{"id" => 123, "username" => "fake_user"}])
-        end
-      end
       describe "#[]" do
-        before :each do
-          stub_request(:get, "#{concourse_url}/api/v1/builds")
-            .with(headers: auth_header)
-            .to_return(status: 200, body: '[{"id": 1, "name": "main", "auth": {}}]')
+        context "when no block is given" do
+          before :each do
+            stub_request(:get, "#{concourse_url}/api/v1/builds")
+              .with(headers: auth_header)
+              .to_return(status: 200, body: '[{"id": 1, "name": "main", "auth": {}}]')
+          end
+          context "when given a valid endpoint (e.g. :list_builds)" do
+            it "automagically resolves to the request" do
+              expect(subject[:list_builds]).to eq([{"id" => 1, "name" => "main", "auth" => {}}])
+            end
+          end
+          context "when given an invalid endpoint (e.g. :fake_item)" do
+            it "raises EndpointError" do
+              expect { subject[:fake_item] }.to raise_error(EndpointError)
+            end
+          end
         end
-        it "makes a call given a valid endpoint (e.g. :list_builds)" do
-          expect(subject[:list_builds]).to eq([{"id" => 1, "name" => "main", "auth" => {}}])
+        context "when given configurations in a block" do
+          before :each do
+            stub_request(:put, "#{concourse_url}/api/v1/teams/all-star/pipelines/old-pipeline/rename")
+              .with(headers: auth_header, body: '{"name": "new-pipeline"}')
+              .to_return(status: 204)
+          end
+          it "fills the path appropriately" do
+            expect(
+              subject[:rename_pipeline] { |options|
+                options.path_vars = {team_name: "all-star", pipeline_name: "old-pipeline"}
+                options.body = '{"name": "new-pipeline"}'
+              }
+            ).to eq true
+          end
         end
       end
     end

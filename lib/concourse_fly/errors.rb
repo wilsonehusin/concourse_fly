@@ -1,6 +1,8 @@
 module ConcourseFly
   class FlyError < StandardError; end
 
+  class EndpointError < FlyError; end
+
   # Unable to understand response from Concourse
   class ResponseError < FlyError
     def initialize(message, faraday_response)

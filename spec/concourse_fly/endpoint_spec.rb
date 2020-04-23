@@ -1,4 +1,16 @@
 module ConcourseFly
+  RSpec.describe Endpoint do
+    subject { Endpoint.new "foo", "GET", "/foo/:country" }
+    it "converts to dictionary nicely" do
+      expect(subject.to_h).to eq({name: "foo", http_method: "GET", path: "/foo/:country"})
+    end
+    context "#interpolate" do
+      it "interpolates :variables with provided values" do
+        vars = {country: "indonesia"}
+        expect(subject.interpolate(vars)).to eq "/foo/indonesia"
+      end
+    end
+  end
   RSpec.describe EndpointImporter do
     subject { EndpointImporter.new "v5.8.0" }
     describe "#fetch" do
@@ -12,7 +24,7 @@ module ConcourseFly
           allow(File).to receive(:read).and_return(<<~YAML)
             ---
             - name: ListActiveUsersSince
-              method: GET
+              http_method: GET
               path: "/api/v1/users"
           YAML
         end
