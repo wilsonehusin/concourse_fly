@@ -23,12 +23,12 @@ Or install it yourself as:
 ```ruby
 require "concourse_fly"
 
-fly = ConcourseFly::Client.new("https://concourse-instance.org") do |client|
+fly = ConcourseFly::Client.new("https://ci-dev.net") do |client|
   client.auth_type = :raw
   client.auth_data = {raw: "Bearer adeAOEITNogiim..."}
 end
 
-fly[:get_info]  #=> { "version" => "5.8.0", "worker_version" => "2.2", "external_url" => "https://conocurse-instance.org"
+fly[:get_info]  #=> { "version" => "5.8.0", "worker_version" => "2.2", "external_url" => "https://ci-dev.net"
 ```
 
 ### Authorization
@@ -37,13 +37,13 @@ fly[:get_info]  #=> { "version" => "5.8.0", "worker_version" => "2.2", "external
 
 ```ruby
 # Provide your own HTTP Authorization header
-ConcourseFly::Client.new("https://concourse-instance.org") do |client|
+ConcourseFly::Client.new("https://ci-dev.net") do |client|
   client.auth_type = :raw
   client.auth_data = {raw: "Bearer adeAOEITNogiim..."}
 end
 
 # Let the client parse it from ~/.flyrc
-ConcourseFly::Client.new("https://concourse-instance.org") do |client|
+ConcourseFly::Client.new("https://ci-dev.net") do |client|
   client.auth_type = :flyrc
   client.auth_data = {flyrc_target: "some-target"}
 end
@@ -53,13 +53,13 @@ end
 
 ```ruby
 # Providing local user
-ConcourseFly::Client.new("https://concourse-instance.org") do |client|
+ConcourseFly::Client.new("https://ci-dev.net") do |client|
   client.auth_type = :local
   client.auth_data = {username: "service-account-user", password: "service-account-password"}
 end
 
 # Browser login
-ConcourseFly::Client.new("https://concourse-instance.org") do |client|
+ConcourseFly::Client.new("https://ci-dev.net") do |client|
   client.auth_type = :browser
 end
 ```
@@ -73,15 +73,15 @@ At the time of this writing, the client only support [`v5.8.0` endpoints](https:
 though the routes rarely change between releases.
 
 ```ruby
-fly = ConcourseFly::Client.new("https://concourse-instance.org") do |client|
+fly = ConcourseFly::Client.new("https://ci-dev.net") do |client|
   client.auth_type = :raw
   client.auth_data = {raw: "Bearer adeAOEITNogiim..."}
 end
 
-fly[:rename_pipeline] do |options|                                             # :rename_pipeline => /api/v1/:team_name/pipelines/:old_pipeline/rename
-  options.path_vars = {team_name: "all-star", pipeline_name: "old-pipeline"}   # You need to provide the variables above on this line
-  options.body = '{"name": "new-pipeline"}'                                    # There isn't an official documentation yet for this 😬
-end                                                                            #=> true  (HTTP 204: No Content)
+fly[:rename_pipeline] do |options|   # :rename_pipeline => /api/v1/:team_name/pipelines/:old_pipeline/rename
+  options.path_vars = {team_name: "all-star", pipeline_name: "old-pipeline"}   # substitutes the above 🔼
+  options.body = '{"name": "new-pipeline"}'   # no official documentation yet for this 😬
+end   #=> true  (HTTP 204: No Content)
 ```
 
 ## Development
@@ -92,7 +92,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-We follow [Semantic Versioning](https://semver.org/), thus `v1.0.0` will not be released until [the official REST API support / documentation is out](https://github.com/concourse/concourse/issues/1122).
+This project follows [Semantic Versioning](https://semver.org/), thus `v1.0.0` will not be released until [the official REST API support / documentation is out](https://github.com/concourse/concourse/issues/1122).
 
 Bug reports and pull requests are welcome on [GitHub](https://github.com/wilsonehusin/concourse_fly). This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/wilsonehusin/concourse_fly/blob/master/CODE_OF_CONDUCT.md).
 
