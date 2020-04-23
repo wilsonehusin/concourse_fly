@@ -77,6 +77,8 @@ module ConcourseFly
               .to_return(status: 204)
           end
           it "fills the path appropriately" do
+            # The decision to explicitly include team_name is deliberate, since Concourse accepts
+            # anyone authenticated in `main` team to modify other team's pipeline
             expect(
               subject[:rename_pipeline] { |options|
                 options.path_vars = {team_name: "all-star", pipeline_name: "old-pipeline"}

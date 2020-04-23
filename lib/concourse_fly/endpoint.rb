@@ -31,7 +31,7 @@ module ConcourseFly
     def fetch_from_source
       response = Faraday.get "https://raw.githubusercontent.com/concourse/concourse/#{@version}/atc/routes.go"
       response.body.scan(/\{Path\: .*, Method\: .*, Name\: .*\}/).map do |endpoint|
-        # Treating content as JSON
+        # Treating JSON as YAML
         YAML.safe_load(endpoint).transform_keys(&:downcase)
       end
     end
