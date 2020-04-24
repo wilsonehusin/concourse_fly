@@ -23,7 +23,12 @@ module ConcourseFly
       endpoint = endpoint_lookup(endpoint_sym)
       raise EndpointError.new("Unable to automagically resolve #{endpoint_sym} to a valid endpoint") if endpoint.nil?
 
-      response = connection.run_request(endpoint.http_method.downcase.to_sym, endpoint.interpolate(options.path_vars), options.body, {"Authorization" => generate_auth})
+      response = connection.run_request(
+        endpoint.http_method.downcase.to_sym,
+        endpoint.interpolate(options.path_vars),
+        options.body,
+        {"Authorization" => generate_auth}.merge(options.headers || {})
+      )
       raise FlyError.new("Concourse was unable to respond properly -- #{response.status}: #{response.body}") if (500..599).cover?(response.status)
 
       case response.status
