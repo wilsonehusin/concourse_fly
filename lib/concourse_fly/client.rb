@@ -86,6 +86,7 @@ module ConcourseFly
         req.headers["Content-Type"] = "application/x-www-form-urlencoded"
         req.body = URI.encode_www_form(content)
       }
+      raise Autherror.new("Failed to authenticate with Concourse") unless response.status == 200
 
       token_attributes = JSON.parse(response.body)
       @token_expiry = DateTime.parse(token_attributes["expiry"])
