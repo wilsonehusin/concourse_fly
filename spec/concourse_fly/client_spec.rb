@@ -42,7 +42,7 @@ module ConcourseFly
           end
         end
         it "performs request with provided authorization header" do
-          expect(subject[:get_info_creds]).to eq({})
+          expect(subject[:get_info_creds][:body]).to eq "{}"
         end
       end
       context "reading from ~/.flyrc" do
@@ -64,7 +64,7 @@ module ConcourseFly
           YAML
         end
         it "performs request with provided authorization header" do
-          expect(subject[:get_info_creds]).to eq({})
+          expect(subject[:get_info_creds][:body]).to eq "{}"
         end
       end
       context "local username:password" do
@@ -84,7 +84,7 @@ module ConcourseFly
         end
         before(:each) { stub_token }
         it "performs request with provided authorization header" do
-          expect(subject[:get_info_creds]).to eq({})
+          expect(subject[:get_info_creds][:body]).to eq "{}"
         end
         context "token has not expired" do
           it "does not renew" do
@@ -136,7 +136,7 @@ module ConcourseFly
           end
           context "when given a valid endpoint (e.g. :list_builds)" do
             it "automagically resolves to the request" do
-              expect(subject[:list_builds]).to eq([{"id" => 1, "name" => "main", "auth" => {}}])
+              expect(subject[:list_builds][:body]).to eq '[{"id": 1, "name": "main", "auth": {}}]'
             end
           end
           context "when given an invalid endpoint (e.g. :fake_item)" do

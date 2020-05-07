@@ -15,7 +15,7 @@ module ConcourseFly
     end
 
     def version
-      @version ||= "v#{self[:get_info]["version"]}"
+      @version ||= "v#{JSON.parse(self[:get_info][:body])["version"]}"
     end
 
     def [](endpoint_sym)
@@ -42,7 +42,7 @@ module ConcourseFly
       when 404
         false
       else
-        JSON.parse(response.body)
+        {headers: response.headers, status: response.status, body: response.body}
       end
     rescue Faraday::Error
       raise FlyError.new("Unable to reach target!")
@@ -86,7 +86,7 @@ module ConcourseFly
         req.headers["Content-Type"] = "application/x-www-form-urlencoded"
         req.body = URI.encode_www_form(content)
       }
-      raise Autherror.new("Failed to authenticate with Concourse") unless response.status == 200
+      raise AuthError.new("Failed to authenticate with Concourse") unless response.status == 200
 
       token_attributes = JSON.parse(response.body)
       @token_expiry = DateTime.parse(token_attributes["expiry"])
