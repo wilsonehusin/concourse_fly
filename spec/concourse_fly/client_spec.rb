@@ -74,16 +74,36 @@ module ConcourseFly
             c.auth_data = {username: "airport", password: "CGK"}
           end
         end
-        before :each do
+        let(:stub_token) do
           stub_request(:post, "#{concourse_url}/sky/token")
             .with(
               headers: {"Authorization" => "Basic Zmx5OlpteDU="},
               body: {"grant_type" => "password", "password" => "CGK", "scope" => "openid profile email federated:id groups", "username" => "airport"}
             )
-            .to_return(status: 200, body: '{"token_type": "Bearer", "access_token": "fake_token", "expiry": "2050-05-21T14:26:33Z"}')
+            .to_return(status: 200, body: '{"token_type": "Bearer", "access_token": "fake_token", "expiry": "2051-05-21T00:00:01Z"}')
         end
+        before(:each) { stub_token }
         it "performs request with provided authorization header" do
           expect(subject[:get_info_creds]).to eq({})
+        end
+        context "token has not expired" do
+          it "does not renew" do
+            subject[:get_info_creds]
+            subject[:get_info_creds]
+            subject[:get_info_creds]
+            subject[:get_info_creds]
+            expect(stub_token).to have_been_requested.times 1
+          end
+        end
+        context "token has expired" do
+          before :each do
+            allow(DateTime).to receive(:now).and_return(DateTime.parse("2052-05-21T00:00:01Z"))
+          end
+          it "auto-renews the token" do
+            subject[:get_info_creds]
+            subject[:get_info_creds]
+            expect(stub_token).to have_been_requested.times 2
+          end
         end
       end
     end

@@ -52,18 +52,24 @@ module ConcourseFly
     # private
 
     def generate_auth
-      @auth_header ||= case @auth_type
-                       when :raw
-                         @auth_data[:raw]
-                       when :flyrc
-                         flyrc_content = YAML.safe_load(File.read(File.join(Dir.home + "/.flyrc")))
-                         token = flyrc_content["targets"][@auth_data[:flyrc_target]]["token"]
-                         "#{token["type"]} #{token["value"]}"
-                       when :local
-                         token_from_basic_auth
+      case @auth_type
+      when :raw
+        @auth_data[:raw]
+      when :flyrc
+        @auth_header ||= token_from_flyrc
+      when :local
+        if @token_expiry && DateTime.now < @token_expiry
+          @auth_header
+        else
+          @auth_header = token_from_basic_auth
+        end
       end
-    rescue
-      nil
+    end
+
+    def token_from_flyrc
+      flyrc_content = YAML.safe_load(File.read(File.join(Dir.home + "/.flyrc")))
+      token = flyrc_content["targets"][@auth_data[:flyrc_target]]["token"]
+      "#{token["type"]} #{token["value"]}"
     end
 
     def token_from_basic_auth
@@ -81,7 +87,7 @@ module ConcourseFly
       }
 
       token_attributes = JSON.parse(response.body)
-      @expiry = DateTime.parse(token_attributes["expiry"])
+      @token_expiry = DateTime.parse(token_attributes["expiry"])
       "#{token_attributes["token_type"]} #{token_attributes["access_token"]}"
     end
 
