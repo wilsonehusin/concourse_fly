@@ -1,4 +1,5 @@
 require "base64"
+require "date"
 require "faraday"
 require "ostruct"
 require "json"
