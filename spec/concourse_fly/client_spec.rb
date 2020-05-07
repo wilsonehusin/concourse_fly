@@ -67,12 +67,20 @@ module ConcourseFly
           expect(subject[:get_info_creds]).to eq({})
         end
       end
-      xcontext "local username:password" do
+      context "local username:password" do
         subject do
           Client.new(concourse_url) do |c|
             c.auth_type = :local
             c.auth_data = {username: "airport", password: "CGK"}
           end
+        end
+        before :each do
+          stub_request(:post, "#{concourse_url}/sky/token")
+            .with(
+              headers: {"Authorization" => "Basic Zmx5OlpteDU="},
+              body: {"grant_type" => "password", "password" => "CGK", "scope" => "openid profile email federated:id groups", "username" => "airport"}
+            )
+            .to_return(status: 200, body: '{"token_type": "Bearer", "access_token": "fake_token", "expiry": "2050-05-21T14:26:33Z"}')
         end
         it "performs request with provided authorization header" do
           expect(subject[:get_info_creds]).to eq({})

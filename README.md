@@ -47,17 +47,17 @@ ConcourseFly::Client.new("https://ci-dev.net") do |client|
   client.auth_type = :flyrc
   client.auth_data = {flyrc_target: "some-target"}
 end
-```
 
-#### Coming soon
-
-```ruby
 # Providing local user
 ConcourseFly::Client.new("https://ci-dev.net") do |client|
   client.auth_type = :local
   client.auth_data = {username: "service-account-user", password: "service-account-password"}
 end
+```
 
+#### Coming soon
+
+```ruby
 # Browser login
 ConcourseFly::Client.new("https://ci-dev.net") do |client|
   client.auth_type = :browser

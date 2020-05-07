@@ -1,3 +1,4 @@
+require "base64"
 require "faraday"
 require "ostruct"
 require "json"
@@ -58,9 +59,30 @@ module ConcourseFly
                          flyrc_content = YAML.safe_load(File.read(File.join(Dir.home + "/.flyrc")))
                          token = flyrc_content["targets"][@auth_data[:flyrc_target]]["token"]
                          "#{token["type"]} #{token["value"]}"
+                       when :local
+                         token_from_basic_auth
       end
     rescue
       nil
+    end
+
+    def token_from_basic_auth
+      content = {
+        username: @auth_data[:username],
+        password: @auth_data[:password],
+        grant_type: "password",
+        scope: "openid profile email federated:id groups",
+      }
+
+      response = connection.post("sky/token") { |req|
+        req.headers["Authorization"] = "Basic #{Base64.encode64("fly:Zmx5").chomp}"
+        req.headers["Content-Type"] = "application/x-www-form-urlencoded"
+        req.body = URI.encode_www_form(content)
+      }
+
+      token_attributes = JSON.parse(response.body)
+      @expiry = DateTime.parse(token_attributes["expiry"])
+      "#{token_attributes["token_type"]} #{token_attributes["access_token"]}"
     end
 
     def connection
